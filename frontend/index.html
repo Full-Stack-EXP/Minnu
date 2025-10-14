@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINNU</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="page-body">
+    
+    <header class="fixed-header" id="fixed-header">
+        <span class="header-logo">MINNU</span>
+        <button class="close-button" id="close-button">X</button>
+    </header>
+
+    <section class="hero-section" id="hero-section">
+        <header class="main-header">
+            <span class="logo">MINNU</span>
+        </header>
+
+        <div class="hero-content">
+            <h1 class="main-title">COMECE</h1>
+            <p class="subtitle">Cada minuto de foco hoje é um minuto de liberdade amanhã.</p>
+            
+            <button class="scroll-down-button" id="scroll-down-button">
+                <span class="arrow-icon">↓</span> 
+            </button>
+        </div>
+    </section>
+    
+    <div class="container" id="app-container">
+        <h1>MINNU</h1>
+
+        <div class="card" id="metas-container">
+            <h2>Meta Diária</h2>
+            <p>60 min (Meta): <span id="tempo-estudado-display">0</span> min (Estudado)</p>
+        </div>
+
+        <div class="card">
+            <h2>Tempo de Estudo Ativo</h2>
+            <p class="timer" id="cronometro-estudo">00:00:00</p>
+            <div class="botoes-acao">
+                <button id="iniciar-estudo">Iniciar Estudo</button>
+                <button id="parar-estudo" disabled>Parar</button>
+            </div>
+        </div>
+
+        <div class="card recompensa">
+            <h2>Saldo para Redes Sociais</h2>
+            <p class="timer" id="tempo-rede-social">0 minutos</p>
+            <button id="gastar-tempo" disabled>Usar Tempo</button>
+            <p class="aviso" id="aviso-gastando"></p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
