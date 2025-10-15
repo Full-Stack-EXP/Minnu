@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span>Peso:</span>
                 <input type="number" class="item-weight" min="1" max="10" value="${activity.weight}">
                 <button class="btn-move" data-action="${isToday ? 'remove' : 'add'}">${isToday ? '←' : '→'}</button>
-                <button class="btn-delete">🗑️</button>
+                <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>
             </div>
         `;
 
