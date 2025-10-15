@@ -22,6 +22,11 @@ body {
     line-height: 1.6;
 }
 
+.screen {
+    width: 100%;
+    min-height: 100vh;
+}
+
 .hero-section {
     background-color: #242938; 
     height: 100vh; 
@@ -65,6 +70,7 @@ body {
     margin: 0;
     line-height: 1;
     letter-spacing: 0.2em;
+    color: #cccccc;
 }
 
 .subtitle {
@@ -150,6 +156,13 @@ body {
     color: #dc3545;
 }
 
+.app-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 20px;
+}
+
 .container {
     background-color: #fff;
     padding: 50px 20px;
@@ -171,15 +184,10 @@ h1 {
 
 .card {
     background-color: transparent; 
-    border: none;
-    padding: 30px 0; 
-    margin: 0; 
-    border-bottom: 1px solid #eeeeee; 
+    border: 1px solid #eee;
+    padding: 20px; 
+    margin: 20px 0; 
     text-align: center;
-}
-
-.card:last-of-type {
-    border-bottom: none;
 }
 
 .card h2 {
@@ -205,6 +213,68 @@ h1 {
 
 .botoes-acao {
     margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.action-bar {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+.action-bar.centered {
+    justify-content: center;
+}
+.action-bar.right-aligned {
+    justify-content: flex-end;
+}
+
+.btn-primary, .btn-secondary, .btn-delete-action {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    color: white;
+    background-color: #28a745;
+    border: 2px solid #28a745;
+}
+.btn-primary:hover {
+    background-color: #218838;
+}
+
+.btn-secondary {
+    color: #007bff;
+    background-color: transparent;
+    border: 2px solid #007bff;
+}
+.btn-secondary:hover {
+    background-color: #f0f8ff;
+}
+
+.btn-delete-action {
+    color: #dc3545;
+    background-color: transparent;
+    border: 2px solid #dc3545;
+}
+.btn-delete-action:hover {
+    background-color: #fff0f0;
+}
+
+.btn-move {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin: 0 5px;
 }
 
 .botoes-acao button, #gastar-tempo {
@@ -216,22 +286,6 @@ h1 {
     font-weight: 600;
     transition: background-color 0.3s, opacity 0.3s;
     background-color: transparent;
-}
-
-#iniciar-estudo {
-    color: #28a745;
-    border: 2px solid #28a745;
-}
-#iniciar-estudo:hover:not(:disabled) {
-    background-color: #f0fff0;
-}
-
-#parar-estudo {
-    color: #dc3545;
-    border: 2px solid #dc3545;
-}
-#parar-estudo:hover:not(:disabled) {
-    background-color: #fff0f0;
 }
 
 #gastar-tempo {
@@ -262,4 +316,114 @@ button:disabled {
 .meta-batida {
     background-color: #f0fff0;
     font-weight: bold;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 900px;
+    padding: 0;
+}
+.grid-container h1 {
+    grid-column: 1 / -1;
+}
+
+.items-panel {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    height: 500px; 
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-title {
+    font-family: 'BBHSansHegarty', sans-serif;
+    font-size: 1.2rem;
+    color: #242938;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+.list-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 15px;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px dashed #eee;
+    font-family: 'Lora', serif;
+    font-size: 1em;
+    min-height: 40px;
+}
+
+.item-name {
+    font-weight: 600;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+}
+
+.item-weight {
+    width: 40px;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'BBHSansHegarty', sans-serif;
+}
+
+/* TELA 3 e 4 */
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 30px;
+}
+
+#total-hours {
+    padding: 10px;
+    font-size: 1.8rem;
+    font-family: 'BBHSansHegarty', sans-serif;
+    width: 100px;
+    text-align: center;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+}
+
+.calculation-summary {
+    background-color: #f8f8f8;
+}
+
+.info-text, .placeholder-text {
+    font-style: italic;
+    color: #666;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+#activity-selector {
+    padding: 10px;
+    font-size: 1.1em;
+    font-family: 'Lora', serif;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
 }
