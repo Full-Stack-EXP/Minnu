@@ -33,15 +33,16 @@
     
     <section class="app-section screen" id="screen-2">
         <div class="container grid-container">
-            <h1>ITENS</h1>
+            <h1>ORGANIZE SUAS ATIVIDADES</h1>
             
             <div class="items-panel">
-                <h2 class="panel-title">ATIVIDADES</h2>
+                <h2 class="panel-title">ITENS</h2>
                 <div class="list-container" id="all-items-list">
                     <p class="placeholder-text">Adicione suas metas de estudo/foco.</p>
                 </div>
                 
-                <div class="action-bar">
+                <div class="add-item-form">
+                    <input type="text" id="new-item-name" placeholder="Nome da nova atividade">
                     <button id="add-item-button" class="btn-primary">ADD</button>
                 </div>
             </div>
@@ -52,8 +53,8 @@
                      <p class="placeholder-text">Mova itens importantes para cá.</p>
                 </div>
                 
-                <div class="action-bar">
-                    <button id="next-screen-2" class="btn-secondary">PRÓXIMA (Tempo) →</button>
+                <div class="action-bar right-aligned">
+                    <button id="next-screen-2" class="btn-primary">Próximo →</button>
                 </div>
             </div>
 
@@ -65,13 +66,13 @@
             <h1>DEFINIR FOCO</h1>
             
             <div class="input-group">
-                <label for="total-hours">Quantas horas de estudo você fará hoje?</label>
+                <label for="total-hours">Quantas horas de foco você terá hoje?</label>
                 <input type="number" id="total-hours" min="0" max="12" value="2">
                 <p class="info-text">Isso será usado para calcular o tempo objetivo de cada atividade.</p>
             </div>
             
             <div class="card calculation-summary">
-                <h2>Horas Calculadas (Hoje)</h2>
+                <h2>Tempo por Atividade (Hoje)</h2>
                 <p id="total-weight-display">Total de Peso: 0</p>
                 <div id="calculated-times-list">
                     <p class="placeholder-text">Mova itens para a lista "ESTUDO HOJE" para calcular.</p>
@@ -79,47 +80,54 @@
             </div>
             
             <div class="action-bar centered">
-                <button id="back-screen-3" class="btn-secondary">← VOLTAR (Itens)</button>
-                <button id="next-screen-3" class="btn-primary">INICIAR ESTUDO →</button>
+                <button id="back-screen-3" class="btn-secondary">← Voltar</button>
+                <button id="next-screen-3" class="btn-primary">Iniciar Foco →</button>
             </div>
         </div>
     </section>
     
     <section class="app-section screen" id="screen-4">
-        <div class="container vertical-container">
-            <h1>EXECUÇÃO</h1>
+        <div class="container execution-grid-container">
+            <h1 class="grid-title">EXECUÇÃO</h1>
 
-            <div class="card selection-card">
-                <h2>O que estudar agora?</h2>
-                <select id="activity-selector">
-                    <option value="">Selecione uma atividade</option>
-                    </select>
-            </div>
-            
-            <div class="card study-details" id="study-info-card">
-                <h2>Atividade: <span id="current-activity-name">Nenhuma</span></h2>
-                <p>Peso: <span id="current-activity-weight">0</span></p>
-                <p>Tempo Objetivo: <span id="current-activity-target">0 min</span></p>
-            </div>
+            <div class="execution-panel-left">
+                <div class="card study-details" id="study-info-card">
+                    <h2>Atividade: <span id="current-activity-name">Nenhuma</span></h2>
+                    <p>Peso: <span id="current-activity-weight">0</span> | Meta: <span id="current-activity-target">0 min</span></p>
+                    <p>Tempo Focado: <span id="current-activity-spent">00:00:00</span></p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
 
-            <div class="card">
-                <h2>Cronômetro</h2>
-                <p class="timer" id="cronometro-estudo">00:00:00</p>
-                <div class="botoes-acao">
-                    <button id="iniciar-estudo">START</button>
-                    <button id="parar-estudo" disabled>STOP</button>
+                <div class="card">
+                    <h2>Cronômetro</h2>
+                    <p class="timer" id="cronometro-estudo">00:00:00</p>
+                    <div class="botoes-acao">
+                        <button id="iniciar-estudo" class="btn-primary" disabled>START</button>
+                        <button id="parar-estudo" class="btn-secondary" disabled>STOP</button>
+                    </div>
+                </div>
+    
+                <div class="card recompensa">
+                    <h2>Saldo para Pausas</h2>
+                    <p class="timer" id="tempo-rede-social">0 minutos</p>
+                    <button id="gastar-tempo" class="btn-secondary" disabled>Usar 1 Minuto</button>
+                    <p class="aviso" id="aviso-gastando"></p>
                 </div>
             </div>
 
-            <div class="card recompensa">
-                <h2>Saldo para Redes Sociais</h2>
-                <p class="timer" id="tempo-rede-social">0 minutos</p>
-                <button id="gastar-tempo" disabled>Usar Tempo</button>
-                <p class="aviso" id="aviso-gastando"></p>
+            <div class="execution-panel-right">
+                <div class="items-panel">
+                    <h2 class="panel-title">ITENS DE HOJE</h2>
+                    <div class="list-container" id="execution-today-list">
+                        <p class="placeholder-text">Nenhuma atividade para hoje.</p>
+                    </div>
+                </div>
             </div>
             
-            <div class="action-bar centered">
-                <button id="back-screen-4" class="btn-secondary">← VOLTAR (Tempo)</button>
+            <div class="action-bar-footer">
+                <button id="back-screen-4" class="btn-secondary">← Voltar</button>
             </div>
         </div>
     </section>
