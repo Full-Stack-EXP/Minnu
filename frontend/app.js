@@ -211,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
         $cronometroEstudo.textContent = formatTime(tempoEstudadoHojeSegundos);
         $tempoRedeSocial.textContent = formatTimeMinutes(tempoRedeSocialSegundos);
         $btnGastarTempo.disabled = tempoRedeSocialSegundos < 60 || cronometroEstudoInterval;
+        $nextScreen2.disabled = todayActivities.length === 0;
         salvarEstado();
     }
 
@@ -338,7 +339,10 @@ document.addEventListener('DOMContentLoaded', () => {
     $btnIniciarEstudo.addEventListener('click', iniciarEstudo);
     $btnPararEstudo.addEventListener('click', pararEstudo);
     $btnGastarTempo.addEventListener('click', gastarTempo);
-    $backScreen4.addEventListener('click', () => scrollToScreen(3));
+    $backScreen4.addEventListener('click', () => {
+        pararEstudo();
+        scrollToScreen(3);
+    });
 
     carregarEstado();
 });

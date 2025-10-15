@@ -420,25 +420,20 @@ button:disabled {
 .execution-grid-container {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1fr auto;
     gap: 40px;
     width: 100%;
     max-width: 1200px;
 }
 
-.grid-title {
-    grid-column: 1 / -1;
-    grid-row: 1;
-}
-
 .execution-panel-left {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 1;
 }
 
 .execution-panel-right {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 1;
 }
 .execution-panel-right .items-panel {
     height: 100%;
@@ -446,7 +441,7 @@ button:disabled {
 
 .action-bar-footer {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 2;
     display: flex;
     justify-content: center;
 }
