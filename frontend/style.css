@@ -303,6 +303,7 @@ button:disabled {
     flex-grow: 1;
     overflow-y: auto;
     padding-right: 10px;
+    height: 0;
 }
 
 .list-item {
@@ -498,4 +499,39 @@ button:disabled {
     margin: 0;
     font-size: 0.9rem;
     color: #555;
+}
+
+.time-input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-input-container input {
+    padding: 10px;
+    font-size: 1.8rem;
+    font-family: 'BBHSansHegarty', sans-serif;
+    width: 100px;
+    text-align: center;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+}
+
+.time-input-container input::-webkit-outer-spin-button,
+.time-input-container input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.time-input-container input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
+.time-input-container span {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    padding-bottom: 5px;
 }

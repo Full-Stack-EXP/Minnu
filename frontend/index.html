@@ -70,8 +70,12 @@
             <h1>DEFINIR FOCO</h1>
             
             <div class="input-group">
-                <label for="total-hours">Quantas horas de foco você terá hoje?</label>
-                <input type="number" id="total-hours" min="0" max="12" value="2">
+                <label>Defina o tempo total de foco para hoje:</label>
+                <div class="time-input-container">
+                    <input type="number" id="total-hours" min="0" max="12" value="2" placeholder="HH">
+                    <span>:</span>
+                    <input type="number" id="total-minutes" min="0" max="59" value="0" placeholder="MM">
+                </div>
                 <p class="info-text">Isso será usado para calcular o tempo objetivo de cada atividade.</p>
             </div>
             

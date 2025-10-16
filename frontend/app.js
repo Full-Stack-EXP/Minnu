@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const $nextScreen2 = document.getElementById('next-screen-2');
 
     const $totalHoursInput = document.getElementById('total-hours');
+    const $totalMinutesInput = document.getElementById('total-minutes');
     const $totalWeightDisplay = document.getElementById('total-weight-display');
     const $calculatedTimesList = document.getElementById('calculated-times-list');
     const $backScreen3 = document.getElementById('back-screen-3');
@@ -136,15 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculateAndRenderTimes() {
-        const totalHours = parseFloat($totalHoursInput.value) || 0;
-        const totalMinutes = totalHours * 60;
+        const totalHours = parseInt($totalHoursInput.value) || 0;
+        const totalMinutesInput = parseInt($totalMinutesInput.value) || 0; 
+        const totalMinutes = (totalHours * 60) + totalMinutesInput; 
+
         const totalWeight = todayActivities.reduce((sum, act) => sum + act.weight, 0);
 
         $totalWeightDisplay.textContent = `Total de Peso: ${totalWeight}`;
         $calculatedTimesList.innerHTML = '';
 
         if (totalWeight === 0 || totalMinutes === 0) {
-            $calculatedTimesList.innerHTML = '<p class="placeholder-text">Defina horas e mova itens para calcular.</p>';
+            $calculatedTimesList.innerHTML = '<p class="placeholder-text">Defina o tempo e mova itens para calcular.</p>';
             todayActivities.forEach(act => act.targetTime = 0);
             return;
         }
@@ -336,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $nextScreen2.addEventListener('click', () => scrollToScreen(3));
 
     $totalHoursInput.addEventListener('input', calculateAndRenderTimes);
+    $totalMinutesInput.addEventListener('input', calculateAndRenderTimes);
     $backScreen3.addEventListener('click', () => scrollToScreen(2));
     $nextScreen3.addEventListener('click', () => scrollToScreen(4));
 
