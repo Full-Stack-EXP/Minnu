@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let tempoEstudadoHojeSegundos = 0; 
     let tempoRedeSocialSegundos = 0;
     let cronometroEstudoInterval = null;
+    let cronometroPausaInterval = null;
     let allActivities = []; 
     let todayActivities = []; 
 
@@ -36,9 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const $btnIniciarEstudo = document.getElementById('iniciar-estudo');
     const $btnPararEstudo = document.getElementById('parar-estudo');
     const $tempoRedeSocial = document.getElementById('tempo-rede-social');
-    const $btnGastarTempo = document.getElementById('gastar-tempo');
     const $avisoGastando = document.getElementById('aviso-gastando');
     const $backScreen4 = document.getElementById('back-screen-4');
+    const $timerPausa = document.getElementById('timer-pausa');
+    const $btnIniciarPausa = document.getElementById('iniciar-pausa');
+    const $btnPausarPausa = document.getElementById('pausar-pausa');
 
     function carregarEstado() {
         const dadosSalvos = localStorage.getItem('minnuData');
@@ -213,8 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateUI() {
         $cronometroEstudo.textContent = formatTime(tempoEstudadoHojeSegundos);
-        $tempoRedeSocial.textContent = formatTimeMinutes(tempoRedeSocialSegundos);
-        $btnGastarTempo.disabled = tempoRedeSocialSegundos < 60 || cronometroEstudoInterval;
+        $timerPausa.textContent = formatTime(tempoRedeSocialSegundos); 
+        
+        $btnIniciarPausa.disabled = tempoRedeSocialSegundos <= 0 || cronometroEstudoInterval || cronometroPausaInterval;
+
         $nextScreen2.disabled = todayActivities.length === 0;
         salvarEstado();
     }
@@ -270,21 +275,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function iniciarEstudo() {
         if (cronometroEstudoInterval || !currentStudyActivityId) return;
+        
+        pausarPausa();
 
         $btnIniciarEstudo.disabled = true;
         $btnPararEstudo.disabled = false;
-        $btnGastarTempo.disabled = true;
+        $btnIniciarPausa.disabled = true; 
 
         cronometroEstudoInterval = setInterval(() => {
             tempoEstudadoHojeSegundos++;
+            tempoRedeSocialSegundos++; 
             
             const activity = todayActivities.find(a => a.id === currentStudyActivityId);
             if (activity) {
                 activity.timeSpent = (activity.timeSpent || 0) + 1;
-            }
-
-            if (tempoEstudadoHojeSegundos % 60 === 0) {
-                tempoRedeSocialSegundos += RECOMPENSA_MINUTO_NORMAL * 60;
             }
             
             updateUI();
@@ -308,6 +312,34 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => $avisoGastando.textContent = '', 2000);
             updateUI();
         }
+    }
+
+    function iniciarPausa() {
+        if (tempoRedeSocialSegundos <= 0 || cronometroPausaInterval) return;
+
+        pararEstudo(); 
+
+        $btnIniciarPausa.disabled = true;
+        $btnPausarPausa.disabled = false;
+        $btnIniciarEstudo.disabled = true; 
+
+        cronometroPausaInterval = setInterval(() => {
+            tempoRedeSocialSegundos--;
+            updateUI();
+
+            if (tempoRedeSocialSegundos <= 0) {
+                tempoRedeSocialSegundos = 0;
+                pausarPausa();
+                alert("Seu tempo de pausa acabou!");
+            }
+        }, 1000);
+    }
+
+    function pausarPausa() {
+        clearInterval(cronometroPausaInterval);
+        cronometroPausaInterval = null;
+        $btnPausarPausa.disabled = true;
+        updateUI();
     }
 
     function atualizarTudo() {
@@ -356,7 +388,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $scrollDownButton.addEventListener('click', () => scrollToScreen(2));
     $closeButton.addEventListener('click', returnToHero);
-    $headerLogoButton.addEventListener('click', returnToHero);
+    $headerLogoButton.addEventListener('click', () => { 
+        pararEstudo();   
+        pausarPausa();   
+        returnToHero();  
+    });
     
     $addItemButton.addEventListener('click', addItem);
     $nextScreen2.addEventListener('click', () => scrollToScreen(3));
@@ -368,9 +404,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $btnIniciarEstudo.addEventListener('click', iniciarEstudo);
     $btnPararEstudo.addEventListener('click', pararEstudo);
-    $btnGastarTempo.addEventListener('click', gastarTempo);
+    $btnIniciarPausa.addEventListener('click', iniciarPausa);
+    $btnPausarPausa.addEventListener('click', pausarPausa);
     $backScreen4.addEventListener('click', () => {
         pararEstudo();
+        pausarPausa();
         scrollToScreen(3);
     });
 

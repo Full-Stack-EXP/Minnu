@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MINNU - Produtividade</title>
+
+    <link rel="icon" type="image/png" href="logo\logo_circular.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&display=swap" rel="stylesheet">
     
@@ -116,10 +118,12 @@
                 </div>
     
                 <div class="card recompensa">
-                    <h2>Saldo para Pausas</h2>
-                    <p class="timer" id="tempo-rede-social">0 minutos</p>
-                    <button id="gastar-tempo" class="btn-secondary" disabled>Usar 1 Minuto</button>
-                    <p class="aviso" id="aviso-gastando"></p>
+                    <h2>Timer de Pausa</h2>
+                    <p class="timer" id="timer-pausa">00:00:00</p>
+                    <div class="botoes-acao">
+                        <button id="iniciar-pausa" class="btn-primary" disabled>INICIAR PAUSA</button>
+                        <button id="pausar-pausa" class="btn-secondary" disabled>PAUSAR</button>
+                    </div>
                 </div>
             </div>
 
