@@ -331,6 +331,29 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollToScreen(1);
     }
 
+    function validateTimeInputs() {
+        let hours = parseInt($totalHoursInput.value);
+        let minutes = parseInt($totalMinutesInput.value);
+
+        // Valida horas
+        if (isNaN(hours) || hours < 0) {
+            hours = 0;
+        } else if (hours > 23) { 
+            hours = 23;
+        }
+        $totalHoursInput.value = hours;
+
+        // Valida minutos
+        if (isNaN(minutes) || minutes < 0) {
+            minutes = 0;
+        } else if (minutes > 59) { 
+            minutes = 59;
+        }
+        $totalMinutesInput.value = minutes;
+
+        calculateAndRenderTimes();
+    }
+
     $scrollDownButton.addEventListener('click', () => scrollToScreen(2));
     $closeButton.addEventListener('click', returnToHero);
     $headerLogoButton.addEventListener('click', returnToHero);

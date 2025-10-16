@@ -524,9 +524,9 @@ button:disabled {
     margin: 0;
 }
 
-.time-input-container input[type=number] {
+/* .time-input-container input[type=number] {
     -moz-appearance: textfield;
-}
+} */
 
 
 .time-input-container span {
