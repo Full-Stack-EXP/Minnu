@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const $scrollDownButton = document.getElementById('scroll-down-button');
     const $fixedHeader = document.getElementById('fixed-header');
     const $closeButton = document.getElementById('close-button');
+    const $headerLogoButton = document.getElementById('header-logo-button');
 
     const $allActivitiesList = document.getElementById('all-items-list');
     const $todayStudyList = document.getElementById('today-study-list');
@@ -285,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             updateUI();
             updateSelectedActivityDetails();
+            renderExecutionScreen();
         }, 1000);
     }
 
@@ -328,6 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $scrollDownButton.addEventListener('click', () => scrollToScreen(2));
     $closeButton.addEventListener('click', returnToHero);
+    $headerLogoButton.addEventListener('click', returnToHero);
     
     $addItemButton.addEventListener('click', addItem);
     $nextScreen2.addEventListener('click', () => scrollToScreen(3));
