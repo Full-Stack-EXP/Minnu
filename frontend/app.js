@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    history.scrollRestoration = 'manual';
+
     const RECOMPENSA_MINUTO_NORMAL = 1; 
     let tempoEstudadoHojeSegundos = 0; 
     let tempoRedeSocialSegundos = 0;
@@ -6,8 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let cronometroPausaInterval = null;
     let allActivities = []; 
     let todayActivities = []; 
-
     let currentStudyActivityId = null;
+    
+    let currentScreen = 1; 
 
     const $scrollDownButton = document.getElementById('scroll-down-button');
     const $fixedHeader = document.getElementById('fixed-header');
@@ -44,13 +47,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const $btnPausarPausa = document.getElementById('pausar-pausa');
 
     function carregarEstado() {
+        let loadedScreen = 1;
         const dadosSalvos = localStorage.getItem('minnuData');
+        
         if (dadosSalvos) {
             const data = JSON.parse(dadosSalvos);
             const hoje = new Date().toDateString();
             
             allActivities = data.allActivities || [];
             tempoRedeSocialSegundos = data.tempoRedeSocialSegundos || 0;
+            
+            loadedScreen = data.currentScreen || 1; 
 
             if (data.dataUltimoAcesso === hoje) {
                 tempoEstudadoHojeSegundos = data.tempoEstudadoHojeSegundos || 0;
@@ -65,7 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 { id: 3, name: "Leitura Técnica", weight: 5 },
             ];
         }
+        
         atualizarTudo();
+        return loadedScreen;
     }
 
     function salvarEstado() {
@@ -74,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tempoRedeSocialSegundos,
             allActivities,
             todayActivities,
+            currentScreen,
             dataUltimoAcesso: new Date().toDateString()
         };
         localStorage.setItem('minnuData', JSON.stringify(estado));
@@ -339,6 +349,9 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(cronometroPausaInterval);
         cronometroPausaInterval = null;
         $btnPausarPausa.disabled = true;
+
+        $btnIniciarEstudo.disabled = !currentStudyActivityId; 
+        
         updateUI();
     }
 
@@ -350,43 +363,58 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUI();
     }
 
-    function scrollToScreen(screenNumber) {
+    function navigateToScreen(screenNumber) {
         const targetScreen = document.getElementById(`screen-${screenNumber}`);
         if (!targetScreen) return;
         
         window.scrollTo({ top: targetScreen.offsetTop, behavior: 'smooth' });
-
         $fixedHeader.classList.toggle('is-visible', screenNumber > 1);
+        
+        currentScreen = screenNumber;
+        salvarEstado();
     }
 
+    function jumpToScreen(screenNumber) {
+        const targetScreen = document.getElementById(`screen-${screenNumber}`);
+        if (!targetScreen) {
+             console.warn(`Tentativa de pular para tela #${screenNumber} não encontrada.`);
+             window.scrollTo(0, 0); 
+             $fixedHeader.classList.remove('is-visible');
+             return;
+        }
+        
+        window.scrollTo(0, targetScreen.offsetTop); 
+        
+        if (screenNumber > 1) {
+            $fixedHeader.classList.add('is-visible');
+        } else {
+            $fixedHeader.classList.remove('is-visible');
+        }
+        
+        currentScreen = screenNumber;
+    }
+
+
     function returnToHero() {
-        scrollToScreen(1);
+        navigateToScreen(1); 
     }
 
     function validateTimeInputs() {
         let hours = parseInt($totalHoursInput.value);
         let minutes = parseInt($totalMinutesInput.value);
 
-        // Valida horas
-        if (isNaN(hours) || hours < 0) {
-            hours = 0;
-        } else if (hours > 23) { 
-            hours = 23;
-        }
+        if (isNaN(hours) || hours < 0) hours = 0;
+        else if (hours > 23) hours = 23;
         $totalHoursInput.value = hours;
 
-        // Valida minutos
-        if (isNaN(minutes) || minutes < 0) {
-            minutes = 0;
-        } else if (minutes > 59) { 
-            minutes = 59;
-        }
+        if (isNaN(minutes) || minutes < 0) minutes = 0;
+        else if (minutes > 59) minutes = 59;
         $totalMinutesInput.value = minutes;
 
         calculateAndRenderTimes();
     }
 
-    $scrollDownButton.addEventListener('click', () => scrollToScreen(2));
+    $scrollDownButton.addEventListener('click', () => navigateToScreen(2));
     $closeButton.addEventListener('click', returnToHero);
     $headerLogoButton.addEventListener('click', () => { 
         pararEstudo();   
@@ -395,12 +423,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     $addItemButton.addEventListener('click', addItem);
-    $nextScreen2.addEventListener('click', () => scrollToScreen(3));
+    $nextScreen2.addEventListener('click', () => navigateToScreen(3));
 
     $totalHoursInput.addEventListener('input', calculateAndRenderTimes);
     $totalMinutesInput.addEventListener('input', calculateAndRenderTimes);
-    $backScreen3.addEventListener('click', () => scrollToScreen(2));
-    $nextScreen3.addEventListener('click', () => scrollToScreen(4));
+    $backScreen3.addEventListener('click', () => navigateToScreen(2));
+    $nextScreen3.addEventListener('click', () => navigateToScreen(4));
 
     $btnIniciarEstudo.addEventListener('click', iniciarEstudo);
     $btnPararEstudo.addEventListener('click', pararEstudo);
@@ -409,8 +437,13 @@ document.addEventListener('DOMContentLoaded', () => {
     $backScreen4.addEventListener('click', () => {
         pararEstudo();
         pausarPausa();
-        scrollToScreen(3);
+        navigateToScreen(3);
     });
 
-    carregarEstado();
+    const loadedScreen = carregarEstado(); 
+    
+    setTimeout(() => {
+        jumpToScreen(loadedScreen);
+    }, 0); 
+    
 });
