@@ -1,16 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     history.scrollRestoration = 'manual';
 
-    const RECOMPENSA_MINUTO_NORMAL = 1; 
-    let tempoEstudadoHojeSegundos = 0; 
+    const RECOMPENSA_MINUTO_NORMAL = 1;
+    let tempoEstudadoHojeSegundos = 0;
     let tempoRedeSocialSegundos = 0;
     let cronometroEstudoInterval = null;
     let cronometroPausaInterval = null;
-    let allActivities = []; 
-    let todayActivities = []; 
+    let allActivities = [];
+    let todayActivities = [];
     let currentStudyActivityId = null;
-    
-    let currentScreen = 1; 
+
+    let currentScreen = 1;
 
     const $scrollDownButton = document.getElementById('scroll-down-button');
     const $fixedHeader = document.getElementById('fixed-header');
@@ -49,15 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function carregarEstado() {
         let loadedScreen = 1;
         const dadosSalvos = localStorage.getItem('minnuData');
-        
+
         if (dadosSalvos) {
             const data = JSON.parse(dadosSalvos);
             const hoje = new Date().toDateString();
-            
+
             allActivities = data.allActivities || [];
             tempoRedeSocialSegundos = data.tempoRedeSocialSegundos || 0;
-            
-            loadedScreen = data.currentScreen || 1; 
+
+            loadedScreen = data.currentScreen || 1;
 
             if (data.dataUltimoAcesso === hoje) {
                 tempoEstudadoHojeSegundos = data.tempoEstudadoHojeSegundos || 0;
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { id: 3, name: "Leitura Técnica", weight: 5 },
             ];
         }
-        
+
         atualizarTudo();
         return loadedScreen;
     }
@@ -108,22 +108,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderActivitiesLists() {
         $allActivitiesList.innerHTML = '';
-        $todayStudyList.innerHTML = '';
+
         const todayIds = todayActivities.map(a => a.id);
 
-        const allButToday = allActivities.filter(a => !todayIds.includes(a.id));
-
-        if (allButToday.length === 0) {
+        if (allActivities.length === 0) {
             $allActivitiesList.innerHTML = '<p class="placeholder-text">Adicione ou mova atividades aqui.</p>';
         } else {
-            allButToday.forEach(activity => $allActivitiesList.appendChild(createActivityElement(activity, false)));
+            allActivities.forEach(activity => {
+                const isToday = todayIds.includes(activity.id);
+                $allActivitiesList.appendChild(createActivityElement(activity, isToday));
+            });
         }
-        
-        if (todayActivities.length === 0) {
-            $todayStudyList.innerHTML = '<p class="placeholder-text">Mova itens importantes para cá.</p>';
-        } else {
-            todayActivities.forEach(activity => $todayStudyList.appendChild(createActivityElement(activity, true)));
-        }
+
     }
 
     function createActivityElement(activity, isToday) {
@@ -136,14 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="item-controls">
                 <span>Peso:</span>
                 <input type="number" class="item-weight" min="1" max="10" value="${activity.weight}">
-                <button class="btn-move" data-action="${isToday ? 'remove' : 'add'}">${isToday ? '←' : '→'}</button>
+                
+                <div class="btn-select-today ${isToday ? 'selected' : ''}" 
+                     title="${isToday ? 'Remover de hoje' : 'Adicionar para hoje'}">
+                </div>
+
                 <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>
             </div>
         `;
 
         item.querySelector('.item-name').addEventListener('change', (e) => updateActivity(activity.id, 'name', e.target.value));
         item.querySelector('.item-weight').addEventListener('change', (e) => updateActivity(activity.id, 'weight', parseInt(e.target.value)));
-        item.querySelector('.btn-move').addEventListener('click', () => moveActivity(activity.id));
+        
+        item.querySelector('.btn-select-today').addEventListener('click', () => moveActivity(activity.id));
+        
         item.querySelector('.btn-delete').addEventListener('click', () => deleteActivity(activity.id));
 
         return item;
@@ -151,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function calculateAndRenderTimes() {
         const totalHours = parseInt($totalHoursInput.value) || 0;
-        const totalMinutesInput = parseInt($totalMinutesInput.value) || 0; 
-        const totalMinutes = (totalHours * 60) + totalMinutesInput; 
+        const totalMinutesInput = parseInt($totalMinutesInput.value) || 0;
+        const totalMinutes = (totalHours * 60) + totalMinutesInput;
 
         const totalWeight = todayActivities.reduce((sum, act) => sum + act.weight, 0);
 
@@ -168,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         todayActivities.forEach(activity => {
             const rawTime = (activity.weight / totalWeight) * totalMinutes;
             activity.targetTime = roundToNearestTenMinutes(rawTime);
-            
+
             const p = document.createElement('p');
             p.textContent = `${activity.name} (Peso ${activity.weight}): ${activity.targetTime} minutos`;
             $calculatedTimesList.appendChild(p);
@@ -204,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateSelectedActivityDetails();
     }
-    
+
     function updateSelectedActivityDetails() {
         const activity = todayActivities.find(a => a.id === currentStudyActivityId);
         if (activity) {
@@ -226,8 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateUI() {
         $cronometroEstudo.textContent = formatTime(tempoEstudadoHojeSegundos);
-        $timerPausa.textContent = formatTime(tempoRedeSocialSegundos); 
-        
+        $timerPausa.textContent = formatTime(tempoRedeSocialSegundos);
+
         $btnIniciarPausa.disabled = tempoRedeSocialSegundos <= 0 || cronometroEstudoInterval || cronometroPausaInterval;
 
         $nextScreen2.disabled = todayActivities.length === 0;
@@ -268,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
             todayActivities = todayActivities.filter(a => a.id !== id);
         } else {
             const activity = allActivities.find(a => a.id === id);
-            if(activity) todayActivities.push({ ...activity, timeSpent: 0 });
+            if (activity) todayActivities.push({ ...activity, timeSpent: 0 });
         }
         atualizarTudo();
     }
@@ -285,22 +287,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function iniciarEstudo() {
         if (cronometroEstudoInterval || !currentStudyActivityId) return;
-        
+
         pausarPausa();
 
         $btnIniciarEstudo.disabled = true;
         $btnPararEstudo.disabled = false;
-        $btnIniciarPausa.disabled = true; 
+        $btnIniciarPausa.disabled = true;
 
         cronometroEstudoInterval = setInterval(() => {
             tempoEstudadoHojeSegundos++;
-            tempoRedeSocialSegundos++; 
-            
+            tempoRedeSocialSegundos++;
+
             const activity = todayActivities.find(a => a.id === currentStudyActivityId);
             if (activity) {
                 activity.timeSpent = (activity.timeSpent || 0) + 1;
             }
-            
+
             updateUI();
             updateSelectedActivityDetails();
             renderExecutionScreen();
@@ -327,11 +329,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function iniciarPausa() {
         if (tempoRedeSocialSegundos <= 0 || cronometroPausaInterval) return;
 
-        pararEstudo(); 
+        pararEstudo();
 
         $btnIniciarPausa.disabled = true;
         $btnPausarPausa.disabled = false;
-        $btnIniciarEstudo.disabled = true; 
+        $btnIniciarEstudo.disabled = true;
 
         cronometroPausaInterval = setInterval(() => {
             tempoRedeSocialSegundos--;
@@ -350,8 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cronometroPausaInterval = null;
         $btnPausarPausa.disabled = true;
 
-        $btnIniciarEstudo.disabled = !currentStudyActivityId; 
-        
+        $btnIniciarEstudo.disabled = !currentStudyActivityId;
+
         updateUI();
     }
 
@@ -366,9 +368,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function navigateToScreen(screenNumber) {
         const targetScreen = document.getElementById(`screen-${screenNumber}`);
         if (!targetScreen) return;
-        
+
         window.scrollTo({ top: targetScreen.offsetTop, behavior: 'smooth' });
-        
+
         currentScreen = screenNumber;
 
         if (!isMobile) {
@@ -381,14 +383,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function jumpToScreen(screenNumber) {
         const targetScreen = document.getElementById(`screen-${screenNumber}`);
         if (!targetScreen) {
-             console.warn(`Tentativa de pular para tela #${screenNumber} não encontrada.`);
-             window.scrollTo(0, 0); 
-             $fixedHeader.classList.remove('is-visible');
-             return;
+            console.warn(`Tentativa de pular para tela #${screenNumber} não encontrada.`);
+            window.scrollTo(0, 0);
+            $fixedHeader.classList.remove('is-visible');
+            return;
         }
-        
-        window.scrollTo(0, targetScreen.offsetTop); 
-        
+
+        window.scrollTo(0, targetScreen.offsetTop);
+
         currentScreen = screenNumber;
 
         if (!isMobile) {
@@ -400,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function returnToHero() {
-        navigateToScreen(1); 
+        navigateToScreen(1);
     }
 
     function validateTimeInputs() {
@@ -420,12 +422,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $scrollDownButton.addEventListener('click', () => navigateToScreen(2));
     $closeButton.addEventListener('click', returnToHero);
-    $headerLogoButton.addEventListener('click', () => { 
-        pararEstudo();   
-        pausarPausa();   
-        returnToHero();  
+    $headerLogoButton.addEventListener('click', () => {
+        pararEstudo();
+        pausarPausa();
+        returnToHero();
     });
-    
+
     $addItemButton.addEventListener('click', addItem);
     $nextScreen2.addEventListener('click', () => navigateToScreen(3));
 
@@ -444,31 +446,31 @@ document.addEventListener('DOMContentLoaded', () => {
         navigateToScreen(3);
     });
 
-let isMobile = window.innerWidth <= 768;
+    let isMobile = window.innerWidth <= 768;
 
-window.addEventListener('resize', () => {
-    isMobile = window.innerWidth <= 768;
-    if (!isMobile) {
-        $fixedHeader.classList.toggle('is-visible', currentScreen > 1);
-    }
-});
-
-window.addEventListener('scroll', () => {
-    if (isMobile) {
-        const currentScrollY = window.scrollY;
-
-        if (currentScrollY > 100) {
-            $fixedHeader.classList.add('is-visible');
-        } else {
-            $fixedHeader.classList.remove('is-visible');
+    window.addEventListener('resize', () => {
+        isMobile = window.innerWidth <= 768;
+        if (!isMobile) {
+            $fixedHeader.classList.toggle('is-visible', currentScreen > 1);
         }
-    }
-});
+    });
 
-    const loadedScreen = carregarEstado(); 
-    
+    window.addEventListener('scroll', () => {
+        if (isMobile) {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > 100) {
+                $fixedHeader.classList.add('is-visible');
+            } else {
+                $fixedHeader.classList.remove('is-visible');
+            }
+        }
+    });
+
+    const loadedScreen = carregarEstado();
+
     setTimeout(() => {
         jumpToScreen(loadedScreen);
-    }, 0); 
-    
+    }, 0);
+
 });
