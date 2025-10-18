@@ -311,7 +311,7 @@ button:disabled {
     flex-grow: 1;
     overflow-y: auto;
     padding-right: 10px;
-    height: 0;
+    max-height: 400px;
 }
 
 .list-item {
@@ -383,6 +383,39 @@ button:disabled {
 
 .btn-delete {
     color: #dc3545;
+}
+
+.btn-select-today {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.btn-select-today:hover {
+    background-color: #e0e0e0;
+}
+
+.btn-select-today.selected {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-select-today.selected::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 10px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
 }
 
 .add-item-form {
@@ -551,6 +584,24 @@ button:disabled {
     padding-bottom: 5px;
 }
 
+#screen-2 .container {
+    max-width: 800px;
+}
+
+#calculated-times-list {
+    max-height: 300px;  
+    overflow-y: auto;    
+    text-align: left;   
+    padding-left: 20px;  
+    padding-right: 10px;
+    margin-top: 15px;   
+}
+
+#screen-3 .container {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+
 @media (max-width: 768px) {
 
     html,
@@ -594,43 +645,6 @@ button:disabled {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto;
         gap: 30px;
-    }
-
-    .items-panel .list-container {
-        min-height: 500px;
-    }
-
-    .btn-select-today {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        border: 2px solid #ccc;
-        background-color: #f0f0f0;
-        cursor: pointer;
-        transition: background-color 0.2s, border-color 0.2s;
-        position: relative;
-        flex-shrink: 0;
-    }
-
-    .btn-select-today:hover {
-        background-color: #e0e0e0;
-    }
-
-    .btn-select-today.selected {
-        background-color: #28a745;
-        border-color: #28a745;
-    }
-
-    .btn-select-today.selected::after {
-        content: '';
-        position: absolute;
-        top: 6px;
-        left: 10px;
-        width: 6px;
-        height: 12px;
-        border: solid white;
-        border-width: 0 3px 3px 0;
-        transform: rotate(45deg);
     }
 
     .execution-grid-container {
