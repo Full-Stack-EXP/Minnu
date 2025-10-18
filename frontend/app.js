@@ -368,9 +368,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!targetScreen) return;
         
         window.scrollTo({ top: targetScreen.offsetTop, behavior: 'smooth' });
-        $fixedHeader.classList.toggle('is-visible', screenNumber > 1);
         
         currentScreen = screenNumber;
+
+        if (!isMobile) {
+            $fixedHeader.classList.toggle('is-visible', currentScreen > 1);
+        }
+
         salvarEstado();
     }
 
@@ -385,13 +389,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         window.scrollTo(0, targetScreen.offsetTop); 
         
-        if (screenNumber > 1) {
-            $fixedHeader.classList.add('is-visible');
+        currentScreen = screenNumber;
+
+        if (!isMobile) {
+            $fixedHeader.classList.toggle('is-visible', currentScreen > 1);
         } else {
             $fixedHeader.classList.remove('is-visible');
         }
-        
-        currentScreen = screenNumber;
     }
 
 
@@ -439,6 +443,27 @@ document.addEventListener('DOMContentLoaded', () => {
         pausarPausa();
         navigateToScreen(3);
     });
+
+let isMobile = window.innerWidth <= 768;
+
+window.addEventListener('resize', () => {
+    isMobile = window.innerWidth <= 768;
+    if (!isMobile) {
+        $fixedHeader.classList.toggle('is-visible', currentScreen > 1);
+    }
+});
+
+window.addEventListener('scroll', () => {
+    if (isMobile) {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > 100) {
+            $fixedHeader.classList.add('is-visible');
+        } else {
+            $fixedHeader.classList.remove('is-visible');
+        }
+    }
+});
 
     const loadedScreen = carregarEstado(); 
     
