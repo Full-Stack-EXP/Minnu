@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const $timerPausa = document.getElementById('timer-pausa');
     const $btnIniciarPausa = document.getElementById('iniciar-pausa');
     const $btnPausarPausa = document.getElementById('pausar-pausa');
+    const $alarmSound = document.getElementById('alarm-sound');
+    const $alarmModalOverlay = document.getElementById('alarm-modal-overlay');
+    const $alarmOkButton = document.getElementById('alarm-ok-button');
 
     function carregarEstado() {
         let loadedScreen = 1;
@@ -342,7 +345,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tempoRedeSocialSegundos <= 0) {
                 tempoRedeSocialSegundos = 0;
                 pausarPausa();
-                alert("Seu tempo de pausa acabou!");
+                
+                $alarmSound.play().catch(e => console.error("Erro ao tocar alarme:", e));
+                
+                $alarmModalOverlay.classList.add('is-visible');
             }
         }, 1000);
     }
@@ -353,6 +359,11 @@ document.addEventListener('DOMContentLoaded', () => {
         $btnPausarPausa.disabled = true;
 
         $btnIniciarEstudo.disabled = !currentStudyActivityId;
+
+        $alarmSound.pause();
+        $alarmSound.currentTime = 0;
+
+        $alarmModalOverlay.classList.remove('is-visible');
 
         updateUI();
     }
@@ -440,6 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $btnPararEstudo.addEventListener('click', pararEstudo);
     $btnIniciarPausa.addEventListener('click', iniciarPausa);
     $btnPausarPausa.addEventListener('click', pausarPausa);
+    $alarmOkButton.addEventListener('click', pausarPausa);
     $backScreen4.addEventListener('click', () => {
         pararEstudo();
         pausarPausa();
